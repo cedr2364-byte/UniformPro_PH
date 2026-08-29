@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniCraft | Custom & Standard Apparel Uniform Marketplace</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="flex flex-col min-h-full text-slate-800 antialiased">
+
+  <header class="sticky top-0 z-40 w-full bg-slate-900 text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <span class="text-2xl font-black tracking-tight text-sky-400">UniCraft</span>
+        <span class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded-full font-medium">Uniform Hub</span>
+      </div>
+      <nav class="hidden md:flex space-x-8 text-sm font-medium">
+        <button onclick="showSection('home')" class="hover:text-sky-400 transition">Home</button>
+        <button onclick="showSection('store')" class="hover:text-sky-400 transition">Store Page</button>
+        <button onclick="showSection('about')" class="hover:text-sky-400 transition">About Us</button>
+        <button onclick="showSection('contacts')" class="hover:text-sky-400 transition">Contacts</button>
+        <button id="nav-dashboard" onclick="showSection('dashboard')" class="hidden hover:text-sky-400 transition text-amber-400 font-bold">Seller Dashboard</button>
+      </nav>
+      <div id="auth-buttons" class="flex items-center space-x-3">
+        <button onclick="openModal('auth-modal')" class="bg-sky-600 hover:bg-sky-700 px-4 py-2 rounded-lg text-sm font-semibold transition">Login / Register</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-7xl w-full mx-auto px-6 py-10">
+
+    <section id="section-home" class="space-y-12">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center bg-white border border-slate-200 rounded-3xl p-8 lg:p-12 shadow-sm">
+        <div class="lg:col-span-2 space-y-6">
+          <span class="text-xs font-bold uppercase tracking-widest text-sky-600 bg-sky-50 px-3 py-1 rounded-md">Tailored Apparel & Supply</span>
+          <h1 class="text-4xl lg:text-5xl font-extrabold text-slate-900 leading-tight">
+            Premium Academic, Corporate, and Industrial Uniforms.
+          </h1>
+          <p class="text-slate-600 text-base lg:text-lg max-w-2xl leading-relaxed">
+            Order standard tailored uniforms or sell custom batch apparel directly to institutions. Verified multi-vendor support with GCash payout integration.
+          </p>
+          <div class="pt-2 flex flex-wrap gap-4">
+            <button onclick="showSection('store')" class="bg-sky-600 hover:bg-sky-700 text-white px-7 py-3.5 rounded-xl font-bold shadow-lg shadow-sky-500/20 transition">
+              Browse Uniform Store &rarr;
+            </button>
+            <button onclick="showSection('about')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-3.5 rounded-xl font-semibold transition">
+              Learn Custom Orders
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-slate-900 text-white rounded-2xl p-6 border border-slate-800 space-y-4 shadow-xl">
+          <div class="w-10 h-10 bg-sky-500/20 text-sky-400 flex items-center justify-center rounded-lg font-bold">✂️</div>
+          <h3 class="font-bold text-lg">Are you a Uniform Supplier?</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">Register as a certified seller, post product catalogs, and accept payments online seamlessly.</p>
+          <button onclick="openModal('auth-modal')" class="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 text-xs py-3 rounded-xl font-bold transition">
+            Become a Registered Seller
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="p-8 bg-white rounded-2xl border border-slate-200 shadow-sm space-y-3">
+          <div class="w-12 h-12 bg-sky-100 text-sky-600 flex items-center justify-center rounded-xl font-bold text-xl">💳</div>
+          <h4 class="font-bold text-lg text-slate-900">Direct GCash & Card Gateway</h4>
+          <p class="text-sm text-slate-500 leading-relaxed">Integrated PayMongo checkout flow enabling instant GCash payments, e-wallets, and credit cards.</p>
+        </div>
+        <div class="p-8 bg-white rounded-2xl border border-slate-200 shadow-sm space-y-3">
+          <div class="w-12 h-12 bg-emerald-100 text-emerald-600 flex items-center justify-center rounded-xl font-bold text-xl">👔</div>
+          <h4 class="font-bold text-lg text-slate-900">Seller Dashboard & Tracking</h4>
+          <p class="text-sm text-slate-500 leading-relaxed">Comprehensive sales metrics for sellers and complete order histories for verified buyers.</p>
+        </div>
+        <div class="p-8 bg-white rounded-2xl border border-slate-200 shadow-sm space-y-3">
+          <div class="w-12 h-12 bg-amber-100 text-amber-600 flex items-center justify-center rounded-xl font-bold text-xl">🤖</div>
+          <h4 class="font-bold text-lg text-slate-900">AI Voiceflow Support</h4>
+          <p class="text-sm text-slate-500 leading-relaxed">Get automated answers on size guides, product availability, and custom bulk inquiries via AI.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="section-store" class="hidden space-y-6">
+      <div class="flex justify-between items-center border-b border-slate-200 pb-4">
+        <div>
+          <h2 class="text-3xl font-bold text-slate-900">Uniform Store Catalog</h2>
+          <p class="text-sm text-slate-500">Select standard fittings, medical scrubs, corporate, and school apparel.</p>
+        </div>
+        <span class="text-xs bg-slate-200 px-3 py-1 rounded-full text-slate-700 font-bold" id="product-count">0 Products Found</span>
+      </div>
+      <div id="product-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+    </section>
+
+    <section id="section-dashboard" class="hidden space-y-8">
+      <div class="border-b border-slate-200 pb-6 flex justify-between items-center">
+        <div>
+          <h2 class="text-3xl font-bold text-slate-900" id="dash-user-name">User Dashboard</h2>
+          <p class="text-sm text-slate-500" id="dash-user-gcash">Registered GCash: Loading...</p>
+        </div>
+        <button id="btn-post-product" onclick="openModal('product-modal')" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-emerald-600/20 transition">
+          + Add New Uniform Listing
+        </button>
+      </div>
+
+      <div id="seller-section" class="hidden space-y-4">
+        <h3 class="text-xl font-bold text-slate-900">Seller Sales History</h3>
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-x-auto shadow-sm">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+              <tr>
+                <th class="p-4">Order ID</th>
+                <th class="p-4">Amount</th>
+                <th class="p-4">Status</th>
+                <th class="p-4">Date</th>
+              </tr>
+            </thead>
+            <tbody id="sales-history-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="buyer-section" class="space-y-4">
+        <h3 class="text-xl font-bold text-slate-900">Purchase History</h3>
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-x-auto shadow-sm">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+              <tr>
+                <th class="p-4">Order Reference</th>
+                <th class="p-4">Uniform Item</th>
+                <th class="p-4">Amount</th>
+                <th class="p-4">Status</th>
+                <th class="p-4">Action</th>
+              </tr>
+            </thead>
+            <tbody id="purchase-history-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="section-about" class="hidden max-w-3xl space-y-6">
+      <h2 class="text-3xl font-bold text-slate-900">About UniCraft Market</h2>
+      <p class="text-slate-600 leading-relaxed">
+        UniCraft is an online supply platform designed to connect institutions, businesses, and individuals with certified uniform manufacturers and local tailors. We streamline bulk ordering, online digital payments, and vendor fulfillment.
+      </p>
+    </section>
+
+    <section id="section-contacts" class="hidden max-w-xl space-y-6">
+      <h2 class="text-3xl font-bold text-slate-900">Contact Uniform Support</h2>
+      <form onsubmit="event.preventDefault(); alert('Message sent to UniCraft support!');" class="space-y-4 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Your Email</label>
+          <input type="email" required class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:outline-sky-500" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Inquiry / Bulk Request</label>
+          <textarea required rows="4" class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:outline-sky-500"></textarea>
+        </div>
+        <button class="bg-sky-600 hover:bg-sky-700 text-white w-full py-3 rounded-xl text-sm font-bold shadow-md shadow-sky-600/20 transition">Submit Inquiry</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="bg-slate-900 text-slate-400 mt-auto border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div>
+        <span class="text-xl font-black text-white tracking-tight">UniCraft</span>
+        <p class="text-xs mt-3 text-slate-400 leading-relaxed">Verified Uniform Marketplace for Schools, Medical Staff, and Corporate Enterprises.</p>
+      </div>
+      <div>
+        <h5 class="text-white text-xs font-bold uppercase tracking-wider mb-4">Sitemap</h5>
+        <ul class="space-y-2 text-xs">
+          <li><button onclick="showSection('home')" class="hover:text-white">Home</button></li>
+          <li><button onclick="showSection('store')" class="hover:text-white">Store Page</button></li>
+          <li><button onclick="showSection('about')" class="hover:text-white">About Us</button></li>
+          <li><button onclick="showSection('contacts')" class="hover:text-white">Contacts</button></li>
+        </ul>
+      </div>
+      <div>
+        <h5 class="text-white text-xs font-bold uppercase tracking-wider mb-4">Payment Methods</h5>
+        <p class="text-xs text-slate-400 leading-relaxed">Accepting GCash, PayMaya, and credit/debit card processing via PayMongo Gateway integration.</p>
+      </div>
+      <div>
+        <h5 class="text-white text-xs font-bold uppercase tracking-wider mb-4">Platform Info</h5>
+        <p class="text-xs text-slate-400">&copy; 2026 UniCraft Marketplace. Built with Next-gen Web Technologies.</p>
+      </div>
+    </div>
+  </footer>
+
+  <div id="auth-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-white max-w-md w-full p-8 rounded-3xl shadow-2xl space-y-6">
+      <div class="flex justify-between items-center">
+        <h3 class="font-extrabold text-xl text-slate-900" id="auth-title">Account Login</h3>
+        <button onclick="closeModal('auth-modal')" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+      </div>
+      <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-4">
+        <input type="hidden" id="auth-mode" value="login" />
+        <div id="register-fields" class="hidden space-y-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Full Name</label>
+            <input type="text" id="auth-fullname" class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:outline-sky-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">GCash Mobile Number</label>
+            <input type="text" id="auth-gcash" placeholder="09XXXXXXXXX" class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:outline-sky-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Account Role</label>
+            <select id="auth-role" class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:outline-sky-500">
+              <option value="buyer">Buyer (Purchase Uniforms)</option>
+              <option value="seller">Seller (Post Uniform Catalog)</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Email</label>
+          <input type="email" id="auth-email" required class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:outline-sky-500" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Password</label>
+          <input type="password" id="auth-password" required class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:outline-sky-500" />
+        </div>
+        <button type="submit" class="w-full bg-sky-600 hover:bg-sky-700 text-white py-3.5 rounded-xl font-bold text-sm shadow-md transition">Continue</button>
+      </form>
+      <div class="text-center text-xs">
+        <button type="button" onclick="toggleAuthMode()" id="auth-toggle-btn" class="text-sky-600 font-bold underline">Don't have an account? Register</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="product-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-white max-w-md w-full p-8 rounded-3xl shadow-2xl space-y-6">
+      <div class="flex justify-between items-center">
+        <h3 class="font-extrabold text-xl text-slate-900">List New Uniform Product</h3>
+        <button onclick="closeModal('product-modal')" class="text-slate-400 text-xl font-bold">&times;</button>
+      </div>
+      <form onsubmit="handlePostProduct(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Uniform Title</label>
+          <input type="text" id="prod-title" required placeholder="e.g. Corporate Blazer Set" class="w-full border border-slate-300 rounded-xl p-3 text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Category</label>
+          <select id="prod-category" class="w-full border border-slate-300 rounded-xl p-3 text-sm">
+            <option value="Corporate">Corporate</option>
+            <option value="Medical">Medical / Scrubs</option>
+            <option value="Academic">Academic / School</option>
+            <option value="Industrial">Industrial / Protective</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Price (PHP)</label>
+          <input type="number" step="0.01" id="prod-price" required placeholder="1200.00" class="w-full border border-slate-300 rounded-xl p-3 text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Image URL</label>
+          <input type="url" id="prod-image" required placeholder="https://..." class="w-full border border-slate-300 rounded-xl p-3 text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Description & Sizing</label>
+          <textarea id="prod-desc" required placeholder="Specify fabric, sizes available..." class="w-full border border-slate-300 rounded-xl p-3 text-sm"></textarea>
+        </div>
+        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl font-bold text-sm shadow-md transition">Publish Uniform</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="review-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-white max-w-md w-full p-8 rounded-3xl shadow-2xl space-y-6">
+      <div class="flex justify-between items-center">
+        <h3 class="font-extrabold text-xl text-slate-900">Product Review & Rating</h3>
+        <button onclick="closeModal('review-modal')" class="text-slate-400 text-xl font-bold">&times;</button>
+      </div>
+      <form onsubmit="handleReviewSubmit(event)" class="space-y-4">
+        <input type="hidden" id="review-product-id" />
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Star Rating</label>
+          <select id="review-rating" class="w-full border border-slate-300 rounded-xl p-3 text-sm">
+            <option value="5">⭐⭐⭐⭐⭐ (5 Stars - Excellent Fit)</option>
+            <option value="4">⭐⭐⭐⭐ (4 Stars - Good Quality)</option>
+            <option value="3">⭐⭐⭐ (3 Stars - Average)</option>
+            <option value="2">⭐⭐ (2 Stars - Sizing Off)</option>
+            <option value="1">⭐ (1 Star - Poor Fabric)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Review Feedback</label>
+          <textarea id="review-comment" required placeholder="Share your experience with fabric quality, stitching, sizing..." class="w-full border border-slate-300 rounded-xl p-3 text-sm"></textarea>
+        </div>
+        <button type="submit" class="w-full bg-sky-600 hover:bg-sky-700 text-white py-3.5 rounded-xl font-bold text-sm shadow-md transition">Submit Review</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // SUPABASE CREDENTIALS
+    const SUPABASE_URL = 'https://YOUR_SUPABASE_PROJECT_ID.supabase.co';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentUser = null;
+    let currentProfile = null;
+
+    // VOICEFLOW CHATBOT EMBED
+    (function(d, t) {
+        var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+        v.onload = function() {
+          window.voiceflow.chat.load({
+            verify: { projectID: 'YOUR_VOICEFLOW_PROJECT_ID' },
+            url: 'https://general-runtime.voiceflow.com',
+            versionID: 'production'
+          });
+        }
+        v.src = "https://cdn.voiceflow.com/widget/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
+    })(document, 'script');
+
+    // UI SPA ROUTING
+    function showSection(id) {
+      ['home', 'store', 'dashboard', 'about', 'contacts'].forEach(s => {
+        document.getElementById(`section-${s}`).classList.add('hidden');
+      });
+      document.getElementById(`section-${id}`).classList.remove('hidden');
+      if (id === 'store') fetchProducts();
+      if (id === 'dashboard') fetchDashboardData();
+    }
+
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+    function toggleAuthMode() {
+      const mode = document.getElementById('auth-mode').value;
+      if (mode === 'login') {
+        document.getElementById('auth-mode').value = 'register';
+        document.getElementById('auth-title').innerText = 'Register Account';
+        document.getElementById('register-fields').classList.remove('hidden');
+        document.getElementById('auth-toggle-btn').innerText = 'Already have an account? Login';
+      } else {
+        document.getElementById('auth-mode').value = 'login';
+        document.getElementById('auth-title').innerText = 'Account Login';
+        document.getElementById('register-fields').classList.add('hidden');
+        document.getElementById('auth-toggle-btn').innerText = 'Don\'t have an account? Register';
+      }
+    }
+
+    // AUTHENTICATION LOGIC
+    async function handleAuth(e) {
+      e.preventDefault();
+      const mode = document.getElementById('auth-mode').value;
+      const email = document.getElementById('auth-email').value;
+      const password = document.getElementById('auth-password').value;
+
+      if (mode === 'register') {
+        const fullName = document.getElementById('auth-fullname').value;
+        const gcash = document.getElementById('auth-gcash').value;
+        const role = document.getElementById('auth-role').value;
+
+        const { data, error } = await supabaseClient.auth.signUp({
+          email, password,
+          options: { data: { full_name: fullName, gcash_number: gcash, role } }
+        });
+        if (error) return alert(error.message);
+        alert('Account registered successfully!');
+      } else {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error) return alert(error.message);
+      }
+      closeModal('auth-modal');
+      checkUser();
+    }
+
+    async function checkUser() {
+      const { data: { user } } = await supabaseClient.auth.getUser();
+      currentUser = user;
+      const navAuth = document.getElementById('auth-buttons');
+      
+      if (user) {
+        const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', user.id).single();
+        currentProfile = profile;
+        
+        document.getElementById('nav-dashboard').classList.remove('hidden');
+        navAuth.innerHTML = `
+          <span class="text-xs text-slate-300 font-semibold">User: ${profile?.full_name || 'Member'}</span>
+          <button onclick="logout()" class="bg-slate-800 hover:bg-slate-700 text-xs text-white px-3 py-2 rounded-lg transition">Logout</button>
+        `;
+        if (profile?.role === 'seller') {
+          document.getElementById('btn-post-product').classList.remove('hidden');
+          document.getElementById('seller-section').classList.remove('hidden');
+        }
+      } else {
+        document.getElementById('nav-dashboard').classList.add('hidden');
+        navAuth.innerHTML = `<button onclick="openModal('auth-modal')" class="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition">Login / Register</button>`;
+      }
+    }
+
+    async function logout() {
+      await supabaseClient.auth.signOut();
+      window.location.reload();
+    }
+
+    // STORE CATALOG
+    async function fetchProducts() {
+      const { data: products } = await supabaseClient.from('products').select('*, reviews(*)');
+      const grid = document.getElementById('product-grid');
+      document.getElementById('product-count').innerText = `${products?.length || 0} Products Available`;
+      
+      grid.innerHTML = (products || []).map(p => {
+        const avgRating = p.reviews?.length 
+          ? (p.reviews.reduce((a, b) => a + b.rating, 0) / p.reviews.length).toFixed(1)
+          : 'New';
+          
+        return `
+          <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between p-5 space-y-4 shadow-sm hover:shadow-md transition">
+            <img src="${p.image_url}" class="h-52 w-full object-cover rounded-xl" alt="Uniform Thumbnail" />
+            <div class="space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-bold uppercase text-sky-600 bg-sky-50 px-2.5 py-1 rounded-md">${p.category || 'Apparel'}</span>
+                <span class="text-amber-500 text-xs font-bold">★ ${avgRating} (${p.reviews?.length || 0})</span>
+              </div>
+              <h3 class="font-bold text-slate-900 text-lg leading-snug">${p.title}</h3>
+              <p class="text-xs text-slate-500 line-clamp-2">${p.description}</p>
+            </div>
+            <div class="flex justify-between items-center pt-3 border-t border-slate-100">
+              <span class="text-xl font-black text-slate-900">₱${p.price}</span>
+              <button onclick="buyProduct('${p.id}', ${p.price}, '${p.seller_id}', '${p.title}')" class="bg-sky-600 hover:bg-sky-700 text-white text-xs px-4 py-2.5 rounded-xl font-bold shadow-md transition">
+                Pay via GCash
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function handlePostProduct(e) {
+      e.preventDefault();
+      const title = document.getElementById('prod-title').value;
+      const category = document.getElementById('prod-category').value;
+      const price = parseFloat(document.getElementById('prod-price').value);
+      const image_url = document.getElementById('prod-image').value;
+      const description = document.getElementById('prod-desc').value;
+
+      const { error } = await supabaseClient.from('products').insert({
+        seller_id: currentUser.id,
+        title, category, price, image_url, description
+      });
+
+      if (error) return alert(error.message);
+      closeModal('product-modal');
+      fetchProducts();
+    }
+
+    // PAYMONGO BUY TRANSACTION
+    async function buyProduct(productId, price, sellerId, title) {
+      if (!currentUser) return openModal('auth-modal');
+
+      const { data: order, error } = await supabaseClient.from('orders').insert({
+        buyer_id: currentUser.id,
+        seller_id: sellerId,
+        product_id: productId,
+        amount: price,
+        status: 'pending'
+      }).select().single();
+
+      if (error) return alert(error.message);
+
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderId: order.id,
+          amount: price,
+          description: title,
+          successUrl: `${window.location.origin}?payment=success`,
+          cancelUrl: `${window.location.origin}?payment=cancelled`
+        })
+      });
+
+      const resData = await response.json();
+      if (resData.checkoutUrl) {
+        window.location.href = resData.checkoutUrl;
+      } else {
+        alert(resData.error || 'PayMongo checkout creation failed.');
+      }
+    }
+
+    // DASHBOARD METRICS & REVIEWS
+    async function fetchDashboardData() {
+      if (!currentUser) return;
+      document.getElementById('dash-user-name').innerText = currentProfile.full_name;
+      document.getElementById('dash-user-gcash').innerText = `Registered GCash Account: ${currentProfile.gcash_number}`;
+
+      // Buyer Order History
+      const { data: purchases } = await supabaseClient.from('orders').select('*, products(title)').eq('buyer_id', currentUser.id);
+      document.getElementById('purchase-history-body').innerHTML = (purchases || []).map(o => `
+        <tr class="border-b border-slate-100">
+          <td class="p-4 text-xs font-mono text-slate-500">${o.id.substring(0,8)}...</td>
+          <td class="p-4 font-semibold">${o.products?.title || 'Uniform Item'}</td>
+          <td class="p-4 font-bold">₱${o.amount}</td>
+          <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-bold ${o.status === 'paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${o.status}</span></td>
+          <td class="p-4">
+            ${o.status === 'paid' ? `<button onclick="openReviewModal('${o.product_id}')" class="text-xs text-sky-600 font-bold hover:underline">+ Leave Star Rating</button>` : '-'}
+          </td>
+        </tr>
+      `).join('');
+
+      // Seller Sales History
+      if (currentProfile.role === 'seller') {
+        const { data: sales } = await supabaseClient.from('orders').select('*').eq('seller_id', currentUser.id);
+        document.getElementById('sales-history-body').innerHTML = (sales || []).map(s => `
+          <tr class="border-b border-slate-100">
+            <td class="p-4 text-xs font-mono text-slate-500">${s.id.substring(0,8)}...</td>
+            <td class="p-4 font-bold">₱${s.amount}</td>
+            <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-bold ${s.status === 'paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${s.status}</span></td>
+            <td class="p-4 text-xs text-slate-500">${new Date(s.created_at).toLocaleDateString()}</td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    function openReviewModal(productId) {
+      document.getElementById('review-product-id').value = productId;
+      openModal('review-modal');
+    }
+
+    async function handleReviewSubmit(e) {
+      e.preventDefault();
+      const product_id = document.getElementById('review-product-id').value;
+      const rating = parseInt(document.getElementById('review-rating').value);
+      const comment = document.getElementById('review-comment').value;
+
+      const { error } = await supabaseClient.from('reviews').insert({
+        product_id, user_id: currentUser.id, rating, comment
+      });
+
+      if (error) return alert(error.message);
+      closeModal('review-modal');
+      alert('Review posted successfully!');
+    }
+
+    // INITIAL SETUP
+    checkUser();
+  </script>
+</body>
+</html>
